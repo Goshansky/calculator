@@ -1,6 +1,6 @@
 const display = document.getElementById('display');
 let expression = localStorage.getItem('expression') || '';
-let hasError = false; // Флаг ошибки
+let hasError = false;
 
 function updateDisplay() {
     display.textContent = expression || '0';
@@ -9,25 +9,28 @@ function updateDisplay() {
 
 document.querySelectorAll('.btn').forEach(button => {
     button.addEventListener('click', () => {
-        if (hasError && button.id !== 'clear') return; // Игнорируем ввод, если ошибка
+        if (hasError && button.id !== 'clear') return;
 
         const value = button.getAttribute('data-value');
+        const lastChar = expression.slice(-1);
 
         if (button.classList.contains('number')) {
             expression += value;
         } else if (button.classList.contains('operator')) {
-            if (value === '**') {
-                // Автоматически добавляем скобки для отрицательных чисел перед возведением в степень
-                const match = expression.match(/(-?\d+(\.\d+)?)$/);
-                if (match) {
-                    expression = expression.slice(0, -match[0].length) + `(${match[0]})` + value;
-                }
-            } else {
-                expression += value;
+            if (['+', '/', '*', '**'].includes(value)) {
+                // Запрещаем оператор в начале или после другого оператора
+                if (expression === '' || ['+', '/', '*', '**', '-'].includes(lastChar)) return;
             }
+            if (value === '-') {
+                // Разрешаем минус в начале, но не допускаем несколько подряд
+                if (expression === '-' || ['+', '/', '*', '**', '-'].includes(lastChar)) return;
+            }
+            expression += value;
         } else if (button.id === 'equal') {
             try {
-                expression = eval(expression).toString();
+                let result = eval(expression);
+                if (!isFinite(result)) throw new Error('Infinity');
+                expression = result.toString();
                 hasError = false;
             } catch {
                 expression = 'Ошибка';
@@ -45,3 +48,4 @@ document.querySelectorAll('.btn').forEach(button => {
 });
 
 updateDisplay();
+
