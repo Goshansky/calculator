@@ -1,7 +1,14 @@
 const display = document.getElementById('display');
-let currentInput = '';
-let operator = '';
-let previousInput = '';
+let currentInput = localStorage.getItem('currentInput') || '';
+let operator = localStorage.getItem('operator') || '';
+let previousInput = localStorage.getItem('previousInput') || '';
+
+function updateDisplay() {
+    display.textContent = currentInput || '0';
+    localStorage.setItem('currentInput', currentInput);
+    localStorage.setItem('operator', operator);
+    localStorage.setItem('previousInput', previousInput);
+}
 
 document.querySelectorAll('.btn').forEach(button => {
     button.addEventListener('click', () => {
@@ -24,9 +31,12 @@ document.querySelectorAll('.btn').forEach(button => {
             currentInput = '';
             previousInput = '';
             operator = '';
+            localStorage.clear();
         } else if (button.id === 'delete') {
             currentInput = currentInput.slice(0, -1);
         }
-        display.textContent = currentInput || '0';
+        updateDisplay();
     });
 });
+
+updateDisplay();
