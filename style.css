@@ -52,6 +52,7 @@ body {
 .equal {
     background: #2ecc71;
     color: white;
+    grid-column: span 2; /* Сливаем кнопку "=" */
 }
 .equal:hover {
     background: #27ae60;
@@ -59,6 +60,7 @@ body {
 .clear {
     background: #f39c12;
     color: white;
+    grid-row: span 2; /* Сливаем кнопку "C" */
 }
 .clear:hover {
     background: #e67e22;
@@ -66,6 +68,7 @@ body {
 .delete {
     background: #9b59b6;
     color: white;
+    grid-row: span 2; /* Сливаем кнопку "⌫" */
 }
 .delete:hover {
     background: #8e44ad;
