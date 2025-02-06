@@ -14,7 +14,11 @@ document.querySelectorAll('.btn').forEach(button => {
     button.addEventListener('click', () => {
         const value = button.getAttribute('data-value');
         if (button.classList.contains('number')) {
-            currentInput += value;
+            if (value === '(-)') {
+                currentInput = currentInput.startsWith('-') ? currentInput.slice(1) : '-' + currentInput;
+            } else {
+                currentInput += value;
+            }
         } else if (button.classList.contains('operator')) {
             if (currentInput !== '') {
                 operator = value;
@@ -23,7 +27,7 @@ document.querySelectorAll('.btn').forEach(button => {
             }
         } else if (button.id === 'equal') {
             if (previousInput && currentInput) {
-                currentInput = eval(previousInput + operator + currentInput);
+                currentInput = eval(previousInput + operator + currentInput).toString();
                 previousInput = '';
                 operator = '';
             }
